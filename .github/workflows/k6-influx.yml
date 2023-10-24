@@ -1,0 +1,18 @@
+on:
+  push:
+    paths:
+      - k6-influx/**/*
+    branches:
+      - "master"
+      - "main"
+      - "latest"
+  release:
+    types:
+      - created
+jobs:
+  build-tensorflow:
+    uses: ./.github/workflows/build.yml
+    with:
+      context: k6-influx
+      dockerfile: k6-influx/Dockerfile
+      name: k6-influx

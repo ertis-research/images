@@ -16,4 +16,4 @@ jobs:
     with:
       context: k6-influx
       dockerfile: k6-influx/Dockerfile
-      name: k6-influx
+      name: ertis-research/k6-influx

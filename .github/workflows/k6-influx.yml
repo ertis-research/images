@@ -2,6 +2,7 @@ on:
   push:
     paths:
       - k6-influx/**/*
+      - .github/workflows/k6-influx.yml
     branches:
       - "master"
       - "main"

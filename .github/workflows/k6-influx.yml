@@ -3,6 +3,7 @@ on:
     paths:
       - k6-influx/**/*
       - .github/workflows/k6-influx.yml
+      - .github/workflows/builder.yml
     branches:
       - "master"
       - "main"

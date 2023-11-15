@@ -15,7 +15,7 @@ jobs:
   build-jupyterhub-tensorflow-gpu:
     uses: ./.github/workflows/builder.yml
     with:
-      context: jupyterhub-tensorflow-gpu/tensorflow-gpu
-      dockerfile: jupyterhub-tensorflow-gpu/tensorflow-gpu/Dockerfile
+      context: jupyterhub/tensorflow-gpu
+      dockerfile: jupyterhub/tensorflow-gpu/Dockerfile
       name: ertis-research/jupyterhub-tensorflow-gpu
       platforms: linux/amd64

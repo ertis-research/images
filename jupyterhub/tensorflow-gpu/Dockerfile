@@ -1,14 +1,15 @@
 # Base image: https://github.com/jupyter/docker-stacks/blob/74bbd0bffc3b444e2d65279739bc2d681b6199e2/images/docker-stacks-foundation/Dockerfile
 
 ARG ROOT_CONTAINER=tensorflow/tensorflow:2.14.0-gpu
+# ARG ROOT_CONTAINER=ubuntu:22.04
 
 ARG FOUNDATION_CONTAINER=quay.io/jupyter/docker-stacks-foundation:4d70cf8da953
 ARG BASE_NOTEBOOK=quay.io/jupyter/base-notebook:b86753318aa1
 ARG MIN_NOTEBOOK
 
+
 FROM ${FOUNDATION_CONTAINER} as foundation
 FROM ${BASE_NOTEBOOK} as base_notebook
-
 
 FROM $ROOT_CONTAINER
 
@@ -37,13 +38,15 @@ USER root
 
 COPY --from=foundation /usr/local/bin/fix-permissions /usr/local/bin/
 COPY --from=foundation --chown="${NB_UID}:${NB_GID}" "${CONDA_DIR}/.condarc" "${CONDA_DIR}/"
-COPY --from=foundation /usr/local/bin/run-hooks.sh /usr/local/bin/
 COPY --from=foundation /usr/local/bin/start.sh /usr/local/bin/
+COPY run-hooks.sh /usr/local/bin/run-hooks.sh
 
 COPY --from=base_notebook /usr/local/bin/start-notebook.sh /usr/local/bin/
 COPY --from=base_notebook /usr/local/bin/start-singleuser.sh /usr/local/bin/
-COPY --from=base_notebook /etc/jupyter/jupyter_server_config.py /etc/jupyter/
-COPY --from=base_notebook /etc/jupyter/docker_healthcheck.py /etc/jupyter/
+# COPY --from=base_notebook /etc/jupyter/jupyter_server_config.py /etc/jupyter/
+# COPY --from=base_notebook /etc/jupyter/docker_healthcheck.py /etc/jupyter/
+COPY jupyter_server_config.py /etc/jupyter/jupyter_server_config.py
+COPY docker_healthcheck.py /etc/jupyter/docker_healthcheck.py
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -56,16 +59,11 @@ RUN apt-get update --yes && \
     tzdata \
     openssh-client \
     less \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-plain-generic \
     xclip \
     git \
     nano \
     bat \    
-    fonts-liberation \
-    pandoc \
-    run-one && \
+    run-one \
     iputils-ping \
     ca-certificates \
     locales \
@@ -83,7 +81,13 @@ RUN mkdir -p /etc/apt/keyrings && \
     echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list && \
     chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list && \
     apt update -y && \
-    apt install -y eza
+    apt install -y eza \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    fonts-liberation \
+    pandoc && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Copy a script that we will use to correct permissions after running certain commands
 RUN chmod a+rx /usr/local/bin/fix-permissions

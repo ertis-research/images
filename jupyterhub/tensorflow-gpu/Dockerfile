@@ -1,6 +1,6 @@
 # Base image: https://github.com/jupyter/docker-stacks/blob/74bbd0bffc3b444e2d65279739bc2d681b6199e2/images/docker-stacks-foundation/Dockerfile
 
-ARG ROOT_CONTAINER=tensorflow/tensorflow:2.14.0-gpu
+ARG ROOT_CONTAINER=tensorflow/tensorflow:2.15.0-gpu
 # ARG ROOT_CONTAINER=ubuntu:22.04
 
 ARG FOUNDATION_CONTAINER=quay.io/jupyter/docker-stacks-foundation:4d70cf8da953

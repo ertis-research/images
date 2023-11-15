@@ -18,4 +18,4 @@ jobs:
       context: jupyterhub-tensorflow-gpu/tensorflow-gpu
       dockerfile: jupyterhub-tensorflow-gpu/tensorflow-gpu/Dockerfile
       name: ertis-research/jupyterhub-tensorflow-gpu
-      platform: linux/amd64
+      platforms: linux/amd64

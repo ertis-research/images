@@ -1,7 +1,7 @@
 on:
   push:
     paths:
-      - jupyterhub-tensorflow-gpu/tensorflow-gpu/**/*
+      - jupyterhub/tensorflow-gpu/**/*
       - .github/workflows/jupyterhub-tensorflow-gpu.yml
       - .github/workflows/builder.yml
     branches:

@@ -3,6 +3,7 @@
 ARG ROOT_CONTAINER=tensorflow/tensorflow:2.14.0-gpu
 ARG BASE_NOTEBOOK=quay.io/jupyter/base-notebook:b86753318aa1
 
+FROM ${BASE_NOTEBOOK} as base_notebook
 FROM $ROOT_CONTAINER
 
 LABEL maintainer="Antonio J. Chaves <chaves@uma.es>"
@@ -17,9 +18,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 USER root
 
 
-COPY --from=${BASE_NOTEBOOK} /usr/local/bin/start-notebook.sh /usr/local/bin/
-COPY --from=${BASE_NOTEBOOK} /usr/local/bin/start-singleuser.sh /usr/local/bin/
-COPY --from=${BASE_NOTEBOOK} /etc/jupyter/jupyter_server_config.py /etc/jupyter/
+COPY --from=base_notebook /usr/local/bin/start-notebook.sh /usr/local/bin/
+COPY --from=base_notebook /usr/local/bin/start-singleuser.sh /usr/local/bin/
+COPY --from=base_notebook /etc/jupyter/jupyter_server_config.py /etc/jupyter/
 
 
 

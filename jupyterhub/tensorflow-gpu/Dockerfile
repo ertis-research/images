@@ -43,8 +43,7 @@ COPY run-hooks.sh /usr/local/bin/run-hooks.sh
 
 COPY --from=base_notebook /usr/local/bin/start-notebook.sh /usr/local/bin/
 COPY --from=base_notebook /usr/local/bin/start-singleuser.sh /usr/local/bin/
-COPY --from=base_notebook /usr/local/bin/start-notebook.py /usr/local/bin/
-COPY --from=base_notebook /usr/local/bin/start-singleuser.py /usr/local/bin/
+COPY start-notebook.py start-singleuser.py /usr/local/bin/
 # COPY --from=base_notebook /etc/jupyter/jupyter_server_config.py /etc/jupyter/
 # COPY --from=base_notebook /etc/jupyter/docker_healthcheck.py /etc/jupyter/
 COPY jupyter_server_config.py /etc/jupyter/jupyter_server_config.py

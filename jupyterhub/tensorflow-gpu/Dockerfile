@@ -41,6 +41,7 @@ RUN mkdir -p /etc/apt/keyrings && \
     apt update -y && \
     apt install -y eza
 
+
 # Configure environment
 ENV CONDA_DIR=/opt/conda \
     SHELL=/bin/bash \

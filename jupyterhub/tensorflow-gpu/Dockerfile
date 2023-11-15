@@ -36,7 +36,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 USER root
 
 COPY --from=foundation /usr/local/bin/fix-permissions /usr/local/bin/
-COPY --from=foundation --chown="${NB_UID}:${NB_GID}" "${CONDA_DIR}/.condarc/initial-condarc" "${CONDA_DIR}/.condarc/"
+COPY --from=foundation --chown="${NB_UID}:${NB_GID}" "${CONDA_DIR}/.condarc" "${CONDA_DIR}/"
 COPY --from=foundation /usr/local/bin/run-hooks.sh /usr/local/bin/
 COPY --from=foundation /usr/local/bin/start.sh /usr/local/bin/
 

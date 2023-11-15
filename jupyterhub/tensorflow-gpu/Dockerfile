@@ -43,6 +43,8 @@ COPY run-hooks.sh /usr/local/bin/run-hooks.sh
 
 COPY --from=base_notebook /usr/local/bin/start-notebook.sh /usr/local/bin/
 COPY --from=base_notebook /usr/local/bin/start-singleuser.sh /usr/local/bin/
+COPY --from=base_notebook /usr/local/bin/start-notebook.py /usr/local/bin/
+COPY --from=base_notebook /usr/local/bin/start-singleuser.py /usr/local/bin/
 # COPY --from=base_notebook /etc/jupyter/jupyter_server_config.py /etc/jupyter/
 # COPY --from=base_notebook /etc/jupyter/docker_healthcheck.py /etc/jupyter/
 COPY jupyter_server_config.py /etc/jupyter/jupyter_server_config.py
@@ -193,7 +195,7 @@ ENV JUPYTER_PORT=8888
 EXPOSE $JUPYTER_PORT
 
 # Configure container startup
-CMD ["start-notebook.sh"]
+CMD ["start-notebook.py"]
 
 # Fix permissions on /etc/jupyter as root
 USER root

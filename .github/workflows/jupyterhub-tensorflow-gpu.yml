@@ -1,0 +1,21 @@
+on:
+  push:
+    paths:
+      - jupyterhub-tensorflow-gpu/tensorflow-gpu/**/*
+      - .github/workflows/jupyterhub-tensorflow-gpu.yml
+      - .github/workflows/builder.yml
+    branches:
+      - "master"
+      - "main"
+      - "latest"
+  release:
+    types:
+      - created
+jobs:
+  build-jupyterhub-tensorflow-gpu:
+    uses: ./.github/workflows/builder.yml
+    with:
+      context: jupyterhub-tensorflow-gpu/tensorflow-gpu
+      dockerfile: jupyterhub-tensorflow-gpu/tensorflow-gpu/Dockerfile
+      name: ertis-research/jupyterhub-tensorflow-gpu
+      platform: linux/amd64

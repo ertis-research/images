@@ -1,7 +1,7 @@
 # Base image: https://github.com/jupyter/docker-stacks/blob/74bbd0bffc3b444e2d65279739bc2d681b6199e2/images/docker-stacks-foundation/Dockerfile
 
-# ARG ROOT_CONTAINER=ubuntu:22.04
 ARG ROOT_CONTAINER=tensorflow/tensorflow:2.14.0-gpu
+ARG BASE_NOTEBOOK=quay.io/jupyter/base-notebook:b86753318aa1
 
 FROM $ROOT_CONTAINER
 
@@ -11,9 +11,17 @@ ARG NB_USER="ertis"
 ARG NB_UID="1000"
 ARG NB_GID="100"
 
+
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
+
+
+COPY --from=${BASE_NOTEBOOK} /usr/local/bin/start-notebook.sh /usr/local/bin/
+COPY --from=${BASE_NOTEBOOK} /usr/local/bin/start-singleuser.sh /usr/local/bin/
+COPY --from=${BASE_NOTEBOOK} /etc/jupyter/jupyter_server_config.py /etc/jupyter/
+
+
 
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update --yes && \
@@ -23,23 +31,13 @@ RUN apt-get update --yes && \
     ca-certificates \
     locales \
     sudo \
-    git \
     iputils-ping \
-    nano \
-    bat \
     gpg \
     tini \
     wget && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
-
-RUN mkdir -p /etc/apt/keyrings && \
-    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list && \
-    chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list && \
-    apt update -y && \
-    apt install -y eza
 
 
 # Configure environment
@@ -137,7 +135,83 @@ USER root
 RUN mkdir /usr/local/bin/start-notebook.d && \
     mkdir /usr/local/bin/before-notebook.d
 
+
+RUN apt-get update --yes && \
+    apt-get upgrade --yes && \
+    apt-get install --yes --no-install-recommends \
+    bzip2 \
+    curl \
+    tzdata \
+    unzip \
+    vim-tiny \
+    openssh-client \
+    less \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-plain-generic \
+    xclip \
+    git \
+    nano \
+    bat \
+    ca-certificates \
+    locales \
+    sudo \
+    iputils-ping \
+    gpg \
+    tini \
+    fonts-liberation \
+    # - pandoc is used to convert notebooks to html files
+    #   it's not present in aarch64 ubuntu image, so we install it here
+    pandoc \
+    # - run-one - a wrapper script that runs no more
+    #   than one unique  instance  of  some  command with a unique set of arguments,
+    #   we use `run-one-constantly` to support `RESTARTABLE` option
+    run-one && \
+    wget && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /etc/apt/keyrings && \
+    wget -qO- https://raw.githubusercontent.com/eza-community/eza/main/deb.asc | sudo gpg --dearmor -o /etc/apt/keyrings/gierens.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/gierens.gpg] http://deb.gierens.de stable main" | sudo tee /etc/apt/sources.list.d/gierens.list && \
+    chmod 644 /etc/apt/keyrings/gierens.gpg /etc/apt/sources.list.d/gierens.list && \
+    apt update -y && \
+    apt install -y eza
+
+USER ${NB_UID}
+
+# Install JupyterLab, Jupyter Notebook, JupyterHub and NBClassic
+# Generate a Jupyter Server config
+# Cleanup temporary files
+# Correct permissions
+# Do all this in a single RUN command to avoid duplicating all of the
+# files across image layers when the permissions change
+WORKDIR /tmp
+RUN mamba install --yes \
+    'jupyterlab' \
+    'notebook' \
+    'jupyterhub' \
+    'nbclassic' && \
+    jupyter server --generate-config && \
+    mamba clean --all -f -y && \
+    npm cache clean --force && \
+    jupyter lab clean && \
+    rm -rf "/home/${NB_USER}/.cache/yarn" && \
+    fix-permissions "${CONDA_DIR}" && \
+    fix-permissions "/home/${NB_USER}"
+
+ENV JUPYTER_PORT=8888
+EXPOSE $JUPYTER_PORT
+
+# Configure container startup
+CMD ["start-notebook.sh"]
+
+# Copy local files as late as possible to avoid cache busting
+COPY start-notebook.sh start-singleuser.sh /usr/local/bin/
+COPY jupyter_server_config.py docker_healthcheck.py /etc/jupyter/
+
+
 # Switch back to jovyan to avoid accidental container runs as root
 USER ${NB_UID}
 
 WORKDIR "${HOME}"
+

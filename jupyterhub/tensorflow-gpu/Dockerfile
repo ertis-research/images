@@ -1,8 +1,9 @@
 # Base image: https://github.com/jupyter/docker-stacks/blob/74bbd0bffc3b444e2d65279739bc2d681b6199e2/images/docker-stacks-foundation/Dockerfile
 
 # ARG ROOT_CONTAINER=tensorflow/tensorflow:2.15.0-gpu
-ARG ROOT_CONTAINER=pytorch/pytorch:2.1.1-cuda12.1-cudnn8-runtime
+# ARG ROOT_CONTAINER=pytorch/pytorch:2.1.1-cuda12.1-cudnn8-runtime
 # ARG ROOT_CONTAINER=ubuntu:22.04
+ARG ROOT_CONTAINER=nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
 
 ARG FOUNDATION_CONTAINER=quay.io/jupyter/docker-stacks-foundation:4d70cf8da953
 ARG BASE_NOTEBOOK=quay.io/jupyter/base-notebook:b86753318aa1
@@ -121,7 +122,8 @@ RUN pip install jupyter-core \
     jupyterlab \ 
     notebook \
     jupyterhub \
-    nbclassic && \
+    nbclassic \ 
+    tensorflow && \
     jupyter server --generate-config && \
     jupyter lab clean && \
     rm -rf "/home/${NB_USER}/.cache/yarn" && \

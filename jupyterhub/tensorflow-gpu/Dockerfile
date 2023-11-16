@@ -1,6 +1,7 @@
 # Base image: https://github.com/jupyter/docker-stacks/blob/74bbd0bffc3b444e2d65279739bc2d681b6199e2/images/docker-stacks-foundation/Dockerfile
 
-ARG ROOT_CONTAINER=tensorflow/tensorflow:2.15.0-gpu
+# ARG ROOT_CONTAINER=tensorflow/tensorflow:2.15.0-gpu
+ARG ROOT_CONTAINER=pytorch/pytorch:2.1.1-cuda12.1-cudnn8-runtime
 # ARG ROOT_CONTAINER=ubuntu:22.04
 
 ARG FOUNDATION_CONTAINER=quay.io/jupyter/docker-stacks-foundation:4d70cf8da953
@@ -145,7 +146,8 @@ CMD ["start-notebook.py"]
 
 # Fix permissions on /etc/jupyter as root
 USER root
-RUN fix-permissions /etc/jupyter/
+RUN fix-permissions /etc/jupyter/ && \
+    fix-permissions "/home/${NB_USER}"
 
 # HEALTHCHECK documentation: https://docs.docker.com/engine/reference/builder/#healthcheck
 # This healtcheck works well for `lab`, `notebook`, `nbclassic`, `server` and `retro` jupyter commands

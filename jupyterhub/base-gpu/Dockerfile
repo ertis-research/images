@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.3-labs
+
 FROM nvidia/cuda:12.2.2-cudnn8-runtime-ubuntu22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -38,11 +40,6 @@ RUN mkdir -p /etc/apt/keyrings && \
     apt install -y eza \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# alias ls with eza
-RUN echo "alias ls='eza'" >> ~/.bashrc
-RUN echo "alias cat='batcat'" >> ~/.bashrc
-
 
 # Install Python 3.10
 RUN apt-get update --yes && \
@@ -88,5 +85,12 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     fix-permissions "${HOME}"
 
 USER ${NB_UID}
+
+RUN chsh -s /bin/bash
+
+RUN <<EOF
+    echo "alias ls='eza'" >> ~/.bashrc
+    echo "alias cat='batcat'" >> ~/.bashrc
+EOF
 
 WORKDIR "${HOME}"

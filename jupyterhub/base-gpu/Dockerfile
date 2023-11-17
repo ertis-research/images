@@ -21,11 +21,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     bat \    
     locales \
     sudo \
-    openssh-client \
     iputils-ping \
     gpg \
     tini \
     wget \
+    nslookup \
     && \    
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -84,13 +84,13 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions "${HOME}"
 
-USER ${NB_UID}
-
 RUN chsh -s /bin/bash
 
 RUN <<EOF
     echo "alias ls='eza'" >> ~/.bashrc
     echo "alias cat='batcat'" >> ~/.bashrc
 EOF
+
+USER ${NB_UID}
 
 WORKDIR "${HOME}"

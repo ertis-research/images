@@ -44,10 +44,10 @@ RUN mkdir -p /etc/apt/keyrings && \
 # Install Python 3.10
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \    
-    python3.10 \
+    python3.11 \
     python3-pip \
-    python3.10-dev \
-    python3.10-distutils \
+    python3.11-dev \
+    python3.11-distutils \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -86,11 +86,13 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 
 RUN chsh -s /bin/bash
 
+USER ${NB_UID}
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
 RUN <<EOF
     echo "alias ls='eza'" >> ~/.bashrc
     echo "alias cat='batcat'" >> ~/.bashrc
 EOF
-
-USER ${NB_UID}
 
 WORKDIR "${HOME}"

@@ -33,6 +33,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     atop \
     jq \
     zsh \
+    sed \
     && \    
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -92,6 +93,10 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     fix-permissions "${HOME}"
 
 # RUN chsh -s /bin/zsh
+
+RUN sed -i 's/auth\s*sufficient\s*pam_shells.so/auth\s*required\s*pam_shells.so/g' /etc/pam.d/chsh
+# Additional line to modify pam_rootok.so (usually not needed)
+# RUN sed -i 's/auth\s*sufficient\s*pam_rootok.so/auth\s*required\s*pam_rootok.so/g' /etc/pam.d/chsh
 
 USER ${NB_UID}
 

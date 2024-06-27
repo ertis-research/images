@@ -91,7 +91,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions "${HOME}"
 
-RUN chsh -s /bin/zsh
+# RUN chsh -s /bin/zsh
 
 USER ${NB_UID}
 

@@ -26,7 +26,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     tini \
     wget \
     dnsutils \
+    zip \
     unzip \
+    python3.10-venv \
+    htop \
+    atop \
+    jq \
+    zsh \
     && \    
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -65,7 +71,7 @@ ARG NB_GID="100"
 
 # Fix: https://github.com/hadolint/hadolint/wiki/DL4006
 # Fix: https://github.com/koalaman/shellcheck/wiki/SC3014
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/zsh", "-o", "pipefail", "-c"]
 
 USER root
 
@@ -85,15 +91,22 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
     chmod g+w /etc/passwd && \
     fix-permissions "${HOME}"
 
-RUN chsh -s /bin/bash
+RUN chsh -s /bin/zsh
 
 USER ${NB_UID}
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN chsh -s /bin/zsh
+
+SHELL ["/bin/zsh", "-o", "pipefail", "-c"]
 
 RUN <<EOF
     echo "alias ls='eza'" >> ~/.bashrc
     echo "alias cat='batcat'" >> ~/.bashrc
+EOF
+
+RUN <<EOF
+    echo "alias ls='eza'" >> ~/.zshrc
+    echo "alias cat='batcat'" >> ~/.zshrc
 EOF
 
 WORKDIR "${HOME}"

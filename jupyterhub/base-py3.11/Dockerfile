@@ -97,7 +97,7 @@ USER ${NB_UID}
 
 RUN chsh -s /bin/zsh
 
-SHELL ["/bin/zsh", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN <<EOF
     echo "alias ls='eza'" >> ~/.bashrc

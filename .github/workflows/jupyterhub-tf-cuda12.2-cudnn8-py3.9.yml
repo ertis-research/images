@@ -1,0 +1,22 @@
+on:
+  push:
+    paths:
+      - jupyterhub/tf-cuda12.2-cudnn8-py3.9/**/*
+      - .github/workflows/jupyterhub-tf-cuda12.2-cudnn8-py3.9.yml
+      - .github/workflows/builder.yml
+    branches:
+      - "master"
+      - "main"
+      - "latest"
+  release:
+    types:
+      - created
+jobs:
+  build-jupyterhub-tf-cuda122-cudnn8-py311:
+    uses: ./.github/workflows/builder.yml
+    with:
+      context: jupyterhub/tf-cuda12.2-cudnn8-py3.9
+      dockerfile: jupyterhub/tf-cuda12.2-cudnn8-py3.9/Dockerfile
+      name: ertis-research/jupyterhub-tf-cuda12.2-cudnn8-py3.9
+      platforms: linux/amd64
+

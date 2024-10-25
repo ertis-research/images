@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1.3-labs
 
-FROM ubuntu:22.04
+FROM nvidia/cuda:12.2.2-cudnn8-devel-ubuntu22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 
 USER root
 
-# Install some basic utilities and python3.10
+# Install some basic utilities and python3.9
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dnsutils \
     zip \
     unzip \
-    python3.10-venv \
+    python3.9-venv \
     htop \
     atop \
     jq \
@@ -49,13 +49,13 @@ RUN mkdir -p /etc/apt/keyrings && \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.10
+# Install Python 3.9
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \    
-    python3.11 \
+    python3.9 \
     python3-pip \
-    python3.11-dev \
-    python3.11-distutils \
+    python3.9-dev \
+    python3.9-distutils \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -94,9 +94,13 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 
 # RUN chsh -s /bin/zsh
 
-RUN chsh -s /bin/zsh ${NB_UID}
+RUN sed -i 's/auth\s*sufficient\s*pam_shells.so/auth\s*required\s*pam_shells.so/g' /etc/pam.d/chsh
+# Additional line to modify pam_rootok.so (usually not needed)
+# RUN sed -i 's/auth\s*sufficient\s*pam_rootok.so/auth\s*required\s*pam_rootok.so/g' /etc/pam.d/chsh
 
 USER ${NB_UID}
+
+RUN chsh -s /bin/zsh
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -104,6 +108,7 @@ RUN <<EOF
     echo "alias ls='eza'" >> ~/.bashrc
     echo "alias cat='batcat'" >> ~/.bashrc
 EOF
+
 
 RUN <<EOF
     echo "alias ls='eza'" >> ~/.zshrc

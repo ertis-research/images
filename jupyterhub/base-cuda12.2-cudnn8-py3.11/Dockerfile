@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 USER root
 
-# Install some basic utilities and python3.10
+# Install some basic utilities and python3.11
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     ca-certificates \
@@ -28,7 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dnsutils \
     zip \
     unzip \
-    python3.10-venv \
+    python3.11-venv \
     htop \
     atop \
     jq \
@@ -49,7 +49,7 @@ RUN mkdir -p /etc/apt/keyrings && \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Python 3.10
+# Install Python 3.11
 RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \    
     python3.11 \

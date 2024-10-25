@@ -1,4 +1,4 @@
-# TensorFlow Jupyter notebook image for Jupyter hub
+# Base CPU Jupyter notebook image for Jupyter hub
 
 Based on the [Jupyter Docker Stacks](https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html) project.
 

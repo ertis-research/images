@@ -1,0 +1,22 @@
+on:
+  push:
+    paths:
+      - jupyterhub/base-py3.9/**/*
+      - .github/workflows/jupyterhub-base-py3.9.yml
+      - .github/workflows/builder.yml
+    branches:
+      - "master"
+      - "main"
+      - "latest"
+  release:
+    types:
+      - created
+jobs:
+  build-jupyterhub-base-py311:
+    uses: ./.github/workflows/builder.yml
+    with:
+      context: jupyterhub/base-py3.9
+      dockerfile: jupyterhub/base-py3.9/Dockerfile
+      name: ertis-research/jupyterhub-base-py3.9
+      platforms: linux/amd64
+

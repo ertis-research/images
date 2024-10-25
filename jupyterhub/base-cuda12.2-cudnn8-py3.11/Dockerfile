@@ -100,7 +100,7 @@ RUN sed -i 's/auth\s*sufficient\s*pam_shells.so/auth\s*required\s*pam_shells.so/
 
 USER ${NB_UID}
 
-RUN chsh -s /bin/zsh
+# RUN chsh -s /bin/zsh
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

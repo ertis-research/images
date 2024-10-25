@@ -16,7 +16,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV HOME="/home/${NB_USER}"
 
-RUN chsh -s /bin/bash
+# RUN chsh -s /bin/bash
 
 USER ${NB_UID}
 

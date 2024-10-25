@@ -94,7 +94,7 @@ RUN echo "auth requisite pam_deny.so" >> /etc/pam.d/su && \
 
 # RUN chsh -s /bin/zsh
 
-RUN chsh -s /bin/zsh ${NB_UID}
+# RUN chsh -s /bin/zsh ${NB_UID}
 
 USER ${NB_UID}
 

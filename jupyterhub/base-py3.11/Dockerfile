@@ -56,7 +56,7 @@ RUN apt-get update --yes && \
     python3-pip \
     python3.11-dev \
     python3.11-distutils \
-    python3.9-venv \
+    python3.11-venv \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 

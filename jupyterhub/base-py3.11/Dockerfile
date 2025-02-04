@@ -28,12 +28,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dnsutils \
     zip \
     unzip \
-    python3.10-venv \
     htop \
     atop \
     jq \
     zsh \
     sed \
+    graphviz \
     && \    
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -56,8 +56,11 @@ RUN apt-get update --yes && \
     python3-pip \
     python3.11-dev \
     python3.11-distutils \
+    python3.9-venv \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
 
 COPY jupyter_requirements.txt /tmp/jupyter_requirements.txt
 

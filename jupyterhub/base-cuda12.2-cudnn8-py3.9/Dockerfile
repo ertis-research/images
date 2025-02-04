@@ -54,8 +54,6 @@ RUN apt-get update --yes && \
     apt-get install --yes --no-install-recommends \    
     python3.9 \
     python3-pip \
-    python3.9-dev \
-    python3.9-distutils \
     && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 

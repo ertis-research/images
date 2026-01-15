@@ -1,0 +1,22 @@
+on:
+  push:
+    paths:
+      - jupyterhub/go-1.25.0/**/*
+      - .github/workflows/jupyterhub-go-1.25.0.yml
+      - .github/workflows/builder.yml
+    branches:
+      - "master"
+      - "main"
+      - "latest"
+  release:
+    types:
+      - created
+jobs:
+  build-jupyterhub-go-1.25.0:
+    uses: ./.github/workflows/builder.yml
+    with:
+      context: jupyterhub/go-1.25.0
+      dockerfile: jupyterhub/go-1.25.0/Dockerfile
+      name: ertis-research/jupyterhub-go-1.25.0
+      platforms: linux/amd64
+

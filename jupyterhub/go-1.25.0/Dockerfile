@@ -23,10 +23,10 @@ ENV PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 # JupyterLab with a `su -l $NB_USER`, so the environment variables are lost. We could use --preserve_environment
 # for GOROOT and GOPATH, but it feels safer to add these to .profile, so the autostart.sh script can also
 # execute `su -l $NB_USER -c "<some command>"` if it wants.
-USER $NB_USER
+USER ${NB_UID}
 WORKDIR ${HOME}
 RUN <<EOF
-  echo "NB_USER=${NB_USER}" >> .profile
+  echo "NB_UID=${NB_UID}" >> .profile
   echo "export PATH=${PATH}" >> .profile
   echo "export GOPATH=${GOPATH}" >> .profile
   echo "export GOROOT=${GOROOT}" >> .profile
@@ -38,7 +38,7 @@ RUN wget --quiet --output-document=- "https://go.dev/dl/go${GO_VERSION}.linux-am
     && go version
 
 # Install GoNB (https://github.com/janpfeifer/gonb) in the user account
-USER $NB_USER
+USER ${NB_UID}
 WORKDIR ${HOME}
 RUN go install golang.org/x/tools/cmd/goimports@latest && \
     go install golang.org/x/tools/gopls@latest
